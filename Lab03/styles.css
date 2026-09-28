@@ -1,3 +1,75 @@
+* {
+    box-sizing: border-box;
+}
+/* body is background & default*/
+
 body {
-    background-color: green;
+    Margin: 0;
+    padding: 40px 20px;
+    color: #000000;
+    font-family: Aptos;
+    line-height:normal;
+}
+/* resume class area */
+.resume {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: white;
+    border: 1px solid;
+    
+}
+/* contact area area */
+.name-header{
+    text-align:center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+/* contact info under name */
+.contact-info {
+    text-align:center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    font-size: 1.0em;
+}
+
+.item-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: baseline;
+}
+
+/* name title  */
+h1 {
+    
+    margin: 0;
+    color: #021855c6;
+    font-size: 2.5em;
+}
+/* Main Headings */
+h2 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    color:#011069
+}
+/* Sub Headings */
+h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.25em;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+/* links*/
+a {
+    color: #021855c6;
+    text-decoration: underline;
+    font-weight: bold;
 }

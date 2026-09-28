@@ -1,41 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Resume</title>
     <link rel="stylesheet" href="../Lab03/styles.css">
 
+            <style>
+                * {
+                box-sizing: border-box;
+                }
+            </style>
+
 </head>
+
 <body>
-    <header>
-        <h1>My Resume</h1>
-    </header>
-    <section>
-        <h2>Education</h2>
-        <p>Bachelor of Technology in Business Systems Development</p>
-    </section>
+    <main class ="resume">
+        <header class ="name-header">
+            <h1>Jamal St. Lewis</h1>
 
-    <section>
-        <h2>Experience</h2>
-        <p>Logistics Coordinator at Kruger Products - 2020-Present</p>   
-    </section>
+            <p class="contact-info">
+                email: <a href="mailto: stle0005@algonquinlive.com"> stle0005@algonquinlive.com</a> |
+                Phone: <a href="tel:613-123-4567"> 613-123-4567</a> |
+                Github: <a href="https://github.com/GauisCode"> GauisCode</a> |
+                Address: 1887 Montmere Avenue, K4A 0E7, Ottawa, ON, Canada
+            </p>
 
-    <section>
-        <h2>Skills</h2>
-        <ul>
-            <li>Programming Languages: Python, Java, C++</li>
-            <li>Web Development: HTML, CSS, JavaScript</li>
-            <li>Database Management: SQL</li>
-        </ul>
-    </section>
+        </header>
 
-    <section>
-        <h2> Additional Information</h2>
-        <p>Languages: English, French</p>
-        <p>Interests: Gaming, Reading, Traveling</p>
+        <section>
+            <h2> Profile </h2>
+            <p>
+            Bilingual college student and professional with nearly ten years of experience in administration, 
+            customer service, project management, marketing, supervising, and event management. 
+            Dependable leader with strong interpersonal skills, adaptability, organization skills, and result orientation. 
+            Driven and passionate about social causes, sports management, and new venture formation.
+            </p>
+        </section>
+
+        <section>
+            <h2>Education</h2>
+                <article class=""resume-item">
+                <div class="item heading"> 
+                    <h4> Bachelor of Technology in Business Systems Development | 2026-Present</h4>
+                    <p> Algonquin College</p>
+                </div>
+                </article>
+
+                <article class="resume-item">
+                <div class="item heading">
+                    <h4> Ontario High School Diploma | 2009-2013</h4>
+                    <p>St. Peter Catholic High School  </p>
+                </div>
+                </article>
+            
+         </section>
 
 
-    </section>
+
+         <section>
+            <h2> Professional Experience </h2>
+
+            <article class="resume-item"></article>
+                <div class="item heading">
+                    <h4> Customer Service Specialist | 2023-Present  </h4>
+                    <p> Kruger Products  | Ottawa, ON, Canada</p>
+                </div>
+
+                <ul>    
+                    <li> Provide excellent customer service  </li>                     
+                    <li> Process orders & communicate with client  </li>
+                    <li> Prepare and maintain reports for the clients and management </li>
+                    <li> Maintain detailed records and clear notes regarding client history </li>  
+                </ul>
+
+            </article>
+            
+            <article class="resume-item"></article>
+                <div class="item heading">
+                    <h4> Educator & Key Leader | 2021-2023 </h4>
+                    <p>  Lululemon | Ottawa, ON, Canada </p>
+                </div>
+
+                <ul>
+                    <li> Supervise, train and coach sales associates in accordance with Lululemon’s proprietary sales techniques  </li>                     
+                    <li> Manage on-site day-to-day operations </li>
+                    <li> Manage and mitigate guest resolution situations </li>
+                    <li> Support senior leaders on special projects </li>
+                </ul>
+
+            </article>
+
+
+
+        </section>
+
+        <section>
+            <h2>Skills</h2>
+                <ul>
+                    <li>Developer Languages & Skills: Java, SQL, HTML</li>
+                    <li>Emergency Medical Response - St John's Ambulance 2015-2020</li>
+                    <li>Project Management & Administration</li>
+                </ul>
+        </section>
+
+        <section>
+            <h2> Additional Information</h2>
+            <div class="item heading"> 
+                <h4> Languages </h4>
+                <p> English, French</p>
+            </div>
+        
+             <div class="item heading"> 
+                <h4> Interests: </h4>
+                <p> Gaming, Reading, Traveling</p>
+            </div>
+            
+        </section>
+    </main>
 </body>
+
 </html>
