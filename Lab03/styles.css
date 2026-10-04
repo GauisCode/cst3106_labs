@@ -1,75 +1,185 @@
+/*
+    styles.css
+    Jamal St. Lewis
+    CST 3106 - Internet Architecture & Web Development
+    Lab 03 - Resume 
+
+*/
+
+/* ******* Basic page setting
+*/
+/* 
+* is universal selector to set box-sizing for all elements 
+box-sizing: border-box to simplify width & height calcualtions
+padding and borders are inside the element's declared width and height
+
+*/
 * {
     box-sizing: border-box;
 }
-/* body is background & default*/
+/* 
+styles the browser window for resume.
+sets background color, font, and line height
+basic page settings, layout, and styling for resume.html
+*/
 
 body {
     Margin: 0;
-    padding: 40px 20px;
-    color: #000000;
+    padding: 32px 16px;
+    background-color: #f3f4f6;
+    color: #1f2937;
     font-family: Aptos;
-    line-height:normal;
+    line-height: 1.6;;
 }
-/* resume class area */
+/* ********Resume container */
+/* white area containing the resume */
 .resume {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 30px;
-    background-color: white;
-    border: 1px solid;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     
 }
-/* contact area area */
+/* *****Header & contact area section*/
+/* .name-header styles the top area that has name & contact links*/
 .name-header{
     text-align:center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     padding-bottom: 20px;
+    border-bottom: 1px solid #006341;
 }
 /* contact info under name */
 .contact-info {
-    text-align:center;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    font-size: 1.0em;
+    margin:0;
+    color:#006341;
+    
 }
-
-.item-heading {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    align-items: baseline;
-}
-
-/* name title  */
+/* main name heading  */
 h1 {
     
     margin: 0;
-    color: #021855c6;
-    font-size: 2.5em;
+    color: #006341;
+    font-size: 2.25rem;
 }
-/* Main Headings */
+/* ******Other Headings & text 
+*/
+/* major section headings including Profile, Education, Experience, and skills*/
 h2 {
-    margin-top: 30px;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    font-size: 1.5em;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #d1d5db;
+    font-size: 1.25rem;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color:#011069
+    color:#006341;
 }
-/* Sub Headings */
-h4 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 1.25em;
+/* Sub Headings- job titles & education qualifications are under this one */
+h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: #111827
 }
-
+/* default spacing under paragraphs */
 p {
     margin-top: 0;
     margin-bottom: 10px;
 }
-/* links*/
+/* *** Links styling*/
+/* styling email, phone, github link*/
 a {
-    color: #021855c6;
+    color: #006341;
+    text-decoration: none;
+    font-weight: 700;
+}
+a:hover,
+a:focus {
     text-decoration: underline;
-    font-weight: bold;
+}
+
+/*
+**** Educaiton and experience entry sections  Resume Item Styling
+*/
+/* add vertical space after each job or education entry
+*/
+.resume-item {
+    margin-bottom: 24px;
+}
+/* shows title on left & date on right 
+*/
+.item-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: baseline;
+}
+
+/* styles date inside item-heading
+*/
+.item-heading p{
+    margin: 0;
+    color: #4b5563;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+/*
+****styling the alll lists
+used in skills sections
+*/
+
+/* add space before lists & indents for bullets points
+*/
+ul {
+    margin: 8px;
+    padding-left: 24px;
+}
+/* adds some separation for bullet points
+*/
+li {
+    margin-bottom: 6px;
+}
+
+/* ********** Responsive Design for smaller screens
+*/
+
+/* 
+will run when brwoser window is 650px or smaller.
+ex: phone or narrow browser window.
+*/
+@media (max-width: 650px) {
+    /* removes grey edges around the resume to fill screen
+    */
+    body {
+        padding: 0px;
+        background-color: #ffffff;
+    }
+    /* reduces padding/border on smaller screens
+    */
+    .resume {
+        padding: 28px 22px;
+        border-radius: 0;
+        border: 0;
+        box-shadow: none;
+    }
+    /* reduces font size for smaller screen
+    */
+    h1 {
+        font-size: 2rem;
+    }
+    /* stacks degree/job title vertially so they don't get squeezed*/
+    item-heading {
+        display: block;
+    }
+    /* add gap before dates when stacked vertically*/
+   item-heading p {
+        margin-top: 4px;
+        white-space: normal;
+    }
+    /* enables contact links to wrap on smaller screens */
+    .contact-info {
+        line-height: 1.8;
+    }
 }

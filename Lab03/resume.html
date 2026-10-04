@@ -1,37 +1,56 @@
 <!DOCTYPE html>
+<!--   Tells browser to use modern html standard -->
 <html lang="en">
-
+<!--    lang attribute tells browser and screen readers to render in english-->
 
 <head>
+    <!--    head contains page info *not actually displayed in web page*-->
     <meta charset="UTF-8">
+    <!--    allows page to display common characters-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Resume</title>
+    <!--    ensures layout fit for different devices like phones, tablets, and resized browser windows.-->
+    <meta
+    name="description" content="Jamal St. Lewis Resume - Business Developmme System student.">
+    >
+    <!--    short description of page for search engines & browser tools-->
+    <title>Jamal St. Lewis | Resume </title>
+    <!-- text displayer in browser tab-->
     <link rel="stylesheet" href="../Lab03/styles.css">
-
-            <style>
-                * {
-                box-sizing: border-box;
-                }
-            </style>
+    <!--    connects the html page to style sheet-->
 
 </head>
 
 <body>
+    <!--    everything in body is visible content for web page-->
     <main class ="resume">
+        <!--  Main contains the.. main content for web page  -->
         <header class ="name-header">
+            <!--    Header class to hold name & contact info-->
             <h1>Jamal St. Lewis</h1>
+            <!--    primary heading on page is h1. -->
 
             <p class="contact-info">
                 email: <a href="mailto: stle0005@algonquinlive.com"> stle0005@algonquinlive.com</a> |
                 Phone: <a href="tel:613-123-4567"> 613-123-4567</a> |
-                Github: <a href="https://github.com/GauisCode"> GauisCode</a> |
-                Address: 1887 Montmere Avenue, K4A 0E7, Ottawa, ON, Canada
+                Github: <a href="https://github.com/GauisCode"
+                target="_blank"
+                rel-"noopener noreferrer"
+                > GitHub</a> 
             </p>
-
+            <!--    
+            a tag (a href) is for links
+            mailto: opens email client to send email
+            tel: opens phone app to call number
+            target="_blank" opens link in new tab
+            rel="noopener noreferrer" prevents new page from accessing the original page for security reasons
+            -->
         </header>
 
         <section>
+            <!--    section is used to group related content together
+                this one is related resume info-->
             <h2> Profile </h2>
+
             <p>
             Bilingual college student and professional with nearly ten years of experience in administration, 
             customer service, project management, marketing, supervising, and event management. 
@@ -42,16 +61,18 @@
 
         <section>
             <h2>Education</h2>
-                <article class=""resume-item">
+                <article class="resume-item">
+                    <!--    an article to separate a singular entry in education section-->
                 <div class="item heading"> 
-                    <h4> Bachelor of Technology in Business Systems Development | 2026-Present</h4>
+                    <!--    item-heading -->
+                    <h3> Bachelor of Technology in Business Systems Development | 2026-Present</h3>
                     <p> Algonquin College</p>
                 </div>
                 </article>
 
                 <article class="resume-item">
                 <div class="item heading">
-                    <h4> Ontario High School Diploma | 2009-2013</h4>
+                    <h3> Ontario High School Diploma | 2009-2013</h3>
                     <p>St. Peter Catholic High School  </p>
                 </div>
                 </article>
@@ -63,9 +84,9 @@
          <section>
             <h2> Professional Experience </h2>
 
-            <article class="resume-item"></article>
+            <article class="resume-item">
                 <div class="item heading">
-                    <h4> Customer Service Specialist | 2023-Present  </h4>
+                    <h3> Customer Service Specialist | 2023-Present  </h3>
                     <p> Kruger Products  | Ottawa, ON, Canada</p>
                 </div>
 
@@ -75,12 +96,11 @@
                     <li> Prepare and maintain reports for the clients and management </li>
                     <li> Maintain detailed records and clear notes regarding client history </li>  
                 </ul>
-
             </article>
             
-            <article class="resume-item"></article>
+            <article class="resume-item">
                 <div class="item heading">
-                    <h4> Educator & Key Leader | 2021-2023 </h4>
+                    <h3> Educator & Key Leader | 2021-2023 </h3>
                     <p>  Lululemon | Ottawa, ON, Canada </p>
                 </div>
 
@@ -98,26 +118,23 @@
         </section>
 
         <section>
-            <h2>Skills</h2>
-                <ul>
+            <h2> Technical & Professional Skills</h2>
+                <ul class="skills-list">
                     <li>Developer Languages & Skills: Java, SQL, HTML</li>
                     <li>Emergency Medical Response - St John's Ambulance 2015-2020</li>
-                    <li>Project Management & Administration</li>
+                    <Li> Mental Health Reponse - St John's Ambulance</Li>
+                    <li>Customer Service & De-Escalation</li>
+                    <li>Adept problem solver</li>
+                    <li>Clear communicator & team player </li>
                 </ul>
         </section>
 
         <section>
             <h2> Additional Information</h2>
-            <div class="item heading"> 
-                <h4> Languages </h4>
-                <p> English, French</p>
-            </div>
-        
-             <div class="item heading"> 
-                <h4> Interests: </h4>
-                <p> Gaming, Reading, Traveling</p>
-            </div>
-            
+            <ul>
+                <li><strong>Languages:</strong> English and French</li>
+                <li><strong>Interests:</strong>Reading, Traveling, Gaming</li>
+            </ul>        
         </section>
     </main>
 </body>
