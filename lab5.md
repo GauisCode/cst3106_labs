@@ -98,9 +98,9 @@ available on the user's device.
 Body text uses `line-height: 1.6`.
 
 
-## Typography Rationale
+### Typography Rationale
 Consistent and clearly legiible font type. consistent fonts for easier downloads. Clear & bold headings
-## Spacing
+### Spacing
 
 Following the 4px spacing scale. 
 | Token | Value | Intended use |
@@ -113,12 +113,24 @@ Following the 4px spacing scale.
 | `--space-2xl` | `48px` | Larger section spacing |
 | `--space-3xl` | `64px` | Large desktop spacing where needed |
 
+## Layout
 
-## Dice Design
+It will have a dice board on the left side with a scoresheet on the right side.
+There is a button on the bottom left of the dice board to "roll" the dice. 
+There is a button on the bottom right of the dice board to "save" the dice. 
+This saved dice will be excluded from the next roll
+
+### Dice Design
 
 5 six-sided dice
 - square with rounded edges
 - white background
+- gold border
+
+### Animation
+Will have a dice animation when the dice is rolled.
+Will try to have an animation when the game is ended.
+
 
 ## Markup photo
- ![my gameboard](gameboard_mockup.jpg)
+ ![my gameboard](gameboard_mockup2.jpg)
