@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylsheet" href="YatzyStyle.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<!-- 
+This is lab6 for class CST3106
+// creation of a Yatzy Game
+-->
+<body>
+
+
+
+
+<!--Dice rolling animation -->
+    <button id="roll-button">Roll Dice</button>
+<div id="die"></div>
+<div class ="game-container"><!-- ALL GAME ELEMENTS WILL GO HERE-->
+    
+</div>
+
+<!--element representing dice #1-->
+<div id="dice1">1</div>
+<!--element representing dice #2-->
+<div id="dice1">2</div>
+<!--element representing dice #3-->
+<div id="dice1">3</div>
+<!--element representing dice #4-->
+<div id="dice1">4</div>
+<!--element representing dice #5-->
+<div id="dice1">5</div>
+
+<!--button to trigger dice roll-->
+<button id="rollButton">Roll Dice</button>
+
+
+<!--Scored Section to organize scoring.-->
+<div class="score-section">
+    <div class="upper-card">
+    <label>Ones</label>
+    <span id="onesSCore">0</span>
+    <label>Twos</label>
+    <label>Threes</label>
+    <label>Fours</label>
+    <label>Fives</label>
+    <label>Sixes</label>
+    <label>Upper Score</label>
+    <label>Upper Bonus</label>
+    <label>Upper Total</label>
+    </div>
+    <div class="lower-card">
+        <label>3 of a Kind</label>
+        <label>4 of a Kind</label>
+        <label>Snall Straight</label>
+        <label>Large Straight</label>
+        <label>Yahtzee</label>
+        <label>Chance</label>
+        <label>Yahtzee Bonus</label>
+    </div>
+    <div class="game-total">
+    <label>Final Upper Total</label>
+    <label>Final Lower Total</label>
+    <label>Final Grand total</label>
+    <div id="totalScore">Total: 0</div>
+    </div>
+</div>
+
+
+<!--SCOREBOARD-->
+
+    <tr>
+<td>Aces</td>
+<td id="1-score"></td>
+<td class="speculative-score"></td>
+</tr>
+...
+<tr>
+<td>Twos</td>
+<td id="2-score"></td>
+<td class="speculative-score"></td>
+</tr>
+<!--Bonus category-->
+<tr id="upper-bonus">
+<td>Bonus</td>
+<td id="upper-bonus-score"></td>
+</tr>
+
+<script>
+
+    //GAME LOGIC
+    function initializeGame(){
+        diceValues = [0, 0, 0, 0, 0,];
+        totalScore = 0;
+    }
+
+
+
+//ROLLING DICE CONTINUED
+function rollDice(){
+    return Math.floor(Math.random() *6) +1;
+}
+//update display with roll after each roll
+function updateDiceDisplay(){
+    document.getElementById ("dice1").innerText=diceValues[0];
+    document.getElementById ("dice2").innerText=diceValues[1];
+    document.getElementById ("dice3").innerText=diceValues[2];
+    document.getElementById ("dice4").innerText=diceValues[3];
+    document.getElementById ("dice5").innerText=diceValues[4];
+}
+
+//roll count
+function incrementRollCount(){
+    if (rollCount <3){
+        rollCount++;
+        document.getElementID("rollCount").textContent = rollCount;
+    }
+}
+
+//Event Listeners
+document.getElementById("rollDiceBtn").addEventListener("click", function(){
+    ///assuming a function called roll dice function
+    rollDice();
+    incrememntRollCount();
+});
+
+
+//roll animation
+const rollButton = document.getElementById('roll-button');
+const die = document.getElementById('die');
+rollButton.addEventListener('click', onRollButtonClick);
+function onRollButtonClick() {
+rollButton.disabled = true;
+// Start the rolling animation
+die.style.animation = 'roll 1s steps(6) infinite’;
+// After 1 second, stop the animation at a random face
+setTimeout(stopAnimation, 1000);
+}
+
+// stop rolling dice animation
+function stopAnimation() {
+    //value between 1 and 6 inclusive
+const randomNumber = Math.floor(Math.random() * 6) + 1;
+die.style.animation = 'none';
+die.style.backgroundPosition = -100 * (randomNumber - 1) + '% 0';
+rollButton.disabled = false; // Re-enable the button
+}
+
+
+</script>
+<script>
+//SCORING LOGIC
+
+//ACES
+if (isInArray(1, diceSelected) && scoreFields[1].innerHTML === '') {
+speculativeScoreTabs[1].style.display = 'table-cell';
+speculativeScoreTabs[1].className = 'speculative-score';
+speculativeScoreTabs[1].innerHTML = sumDuplicates(1, diceSelected);
+speculativeScoreTabs[1].addEventListener('click', lockScoreUpper);
+}
+
+
+//responsible for updating upper score section of scorecard
+function lockScoreUppper(){
+    let score = this.innerHTML;
+    //keep track of running total for upper section
+    uppperBonus += partInt(score);
+    roundNumber +=1;
+    //activated upper section bonus if condition met & has not yet been activated
+    if(!bonusActive){
+        updateUpperBonus();
+    }
+  /*//If the roundNumber reaches 14, it indicates the end of the game. The roll 
+button is disabled by adding the ‘disabled’ class. The rollDie event listener 
+is removed from the roll button, ensuring that the dice can‘t be rolled again.
+The countFinalScore function is called to calculate and display the final score 
+of the game.
+  */
+    if(roundNumber ===14){
+        rollButton.className = 'roll-3 disabled';
+        rollButton.removeEventListener ('click', rollDIe, false);
+        countFinalScore();
+    }
+}
+
+
+function (rollDie) {
+    
+   //update game stat
+   checkRollNumber();
+   if (roundNumber ===1){
+    document.getElement.ID('round-number-wrapper').classname = 'visible';
+   }
+
+   // reset initialize data structures  
+   const diceArea = document.getElmeentID('diceArea');
+   diceArea.innerHTML = '';
+   let newDiceRolls = [];
+   
+   // Calculate number of dice to roll and then roll them
+   let numDiceToRoll = 5 - diceSelected.lenth;
+   for (let i=0; i<numDiceToRoll; i++){
+    newDiceRolls.push(randomizeDie());
+   }
+   // UPDATE GAME DICE
+   diceOnTable = [... newDiceRolls];
+   updateDiceAnywhere;
+
+   //Visual updates
+   drawDiceOnTable();
+   updateScoreTable();
+
+}
+
+/*
+The purpose of the updateDiceAnywhere function is to generate a combined list 
+of dice values that are currently in play. This includes dice that the player has 
+decided to keep (diceSelected) and dice that have just been rolled and are on 
+the table (diceOnTable).
+
+if (diceSelected) { ... }: This checks if there are any dice that the player has 
+selected to keep from previous rolls. 
+ diceAnywhere = diceOnTable.concat(diceSelected);: If there are selected dice, 
+we combine the dice on the table with the selected dice. For example, if 
+diceOnTable = [3, 5] and diceSelected = [1, 2, 6], then diceAnywhere will 
+become [3, 5, 1, 2, 6]
+
+If there are no selected dice, then the dice that are "anywhere" are simply the 
+ones on the table.
+*/
+
+function updateDiceAnywhere () {
+if (diceSelected) {
+diceAnywhere = diceOnTable.concat(diceSelected);
+} else {
+diceAnywhere = diceOnTable;
+}
+}
+
+//CALCULATE THREE-OF-A-KIND
+
+const counts = countDiceValues(dice);
+function countDiceValues (dice){
+    return dice.reduce((acc, val) => {
+        acc[val - 1]++; // increment dice value
+        return acc;
+    },
+    [0,0,0,0,0,0] // start with array of zeros
+);
+}
+
+function calculateThreeOfAKindScore(dice){
+    const counts = countDiceValues(dice);
+
+    if (counts.some(isThreeOrMoreOccurrence)){
+        //sum all dice values
+        return dice.reduce( (sum, val) => sum + val, 0);
+    }
+    return 0;
+}
+
+//CALCULATE FULL HOUSE
+
+//verify if dice counts is a full house (3 of one value and two of another)
+function isFullHouse(counts){
+    return counts.incldues (3) && counts.includes (2);
+}
+
+function calculateFullHouseScore (dice){
+    const counts = countDiceValue(dice);
+    if (isFullHouse(counts)){
+        //fixes Yatzee score of 25
+        return 25;
+    }
+    return 0;
+}
+//will be to update full house score
+const fullHouseScore = calculateFullHouseScore(dice);
+if (fullHouseScore > 0) {
+    speculateiveScoreTabs[9].innerHTML = fullHouseScore;
+}
+
+
+// CALCULATE SMALL STRAIGHT
+let dice = [3, 1, 4, 2, 5];
+dice.sort((a,b) => a - b);
+console.log(dice);
+function isSmallStraight (sortedDice){
+    //Convert the sortedDice array (which contains numbers) into a single string. 
+    const straights = ["1234", "2345", "3456"];
+    /*Check if any of the valid small straight sequences (from the straights array) are present in the diceString.
+    .some() method tests whether at least one element in the array passes the test 
+    implemented by the provided function. In this case, it checks if 
+    diceString contains any of the sequences from the straights array using 
+    the .includes() method
+    */
+    
+    const diceString = sortedDice.join("");
+    return straights.some(straight => diceString.includes(straight));
+}
+
+
+/*
+When dice is passed as an argument to Set, it creates a new Set object with 
+values from dice but removes any duplicate values.
+• The spread (...) syntax is used to take elements out of the Set and place them into 
+an array. This is a common way to convert a Set back into an array
+*/
+
+function calculateSmallStraightScore(dice) {
+    //remove duplicates and sort
+    const sortedDice = [... new Set(dice)].sort();
+    if(isSmallStraight(sortedDice)){
+        // assigned fixed Yatzy score of 30
+        return 30;
+    }
+    return 0;
+}
+
+//CALCULATE LARGE STRAIGHT SCORE
+dice.sort((a,b) => a - b);
+console.log(dice);
+function isLargeStraight (sortedDice){
+    //Convert the sortedDice array (which contains numbers) into a single string. 
+    const straights = ["12345"];
+    /*Check if any of the valid small straight sequences (from the straights array) are present in the diceString.
+    .some() method tests whether at least one element in the array passes the test 
+    implemented by the provided function. In this case, it checks if 
+    diceString contains any of the sequences from the straights array using 
+    the .includes() method
+    */
+    
+    const diceString = sortedDice.join("");
+    return straights.some(straight => diceString.includes(straight));
+}
+
+
+/*
+When dice is passed as an argument to Set, it creates a new Set object with 
+values from dice but removes any duplicate values.
+• The spread (...) syntax is used to take elements out of the Set and place them into 
+an array. This is a common way to convert a Set back into an array
+*/
+
+function calculateLargeStraightScore(dice) {
+    //remove duplicates and sort
+    const sortedDice = [... new Set(dice)].sort();
+    if(isLargeStraight(sortedDice)){
+        // assigned fixed Yatzy score of 30
+        return 40;
+    }
+    return 0;
+}
+
+//CALCULATE YATZY SCORE
+/* checks if each dice has the same  value
+grabs first value of dice with const firstValue
+The everymethod is then used on the dice array. It tests whether all elements in 
+the array pass the provided function. If every dice value `d` is equal to the first 
+value `firstValue`, it means all dice have the same value, and the function 
+returns true. Otherwise, it returns false.
+*/
+function isYatzy(dice){
+    const firstValue = dic[0];
+    return dice.every (d => === firstValue);
+}
+
+/*
+The ternary operator (? 50 : 0) assigns a score of 50 if 
+isYatzy returns true (indicating a Yatzy) and a score of 0 
+otherwise
+*/
+const score = isYatzy (dice) ? 50 : 0;
+
+</script>
+</body>
+</html>

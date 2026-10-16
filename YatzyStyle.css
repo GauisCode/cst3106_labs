@@ -1,0 +1,70 @@
+#container {
+
+    width: 100px;
+height: 100px;
+background-image: url('dice1.jpg');
+background-size: 600% 100%;
+    tr {
+display: flex;
+justify-content: space-between;
+padding: 5px;
+border-bottom: 1px solid #ccc;
+}
+td {
+padding: 5px 10px;
+}
+
+.speculative-score {
+cursor: pointer;
+background-color: rgba(0,0,0,0.05);
+}
+.speculative-score:hover {
+background-color: rgba(0,0,0,0.1);
+}
+
+.game-container {
+    padding: 20px;
+    margin: auto;
+    width: 50%;
+    
+}
+
+#dice1, #dice2,#dice3,#dice4,#dice5{
+    border: radius 10px;
+    width: 50px;
+    height: 50px;
+    font-weight: bold;
+}
+
+#rollButton {
+    padding: 10px 20px;
+    font-size:  1.2em;
+    cursor: pointer;
+}
+
+#rollButton: hover {
+    
+}
+
+}
+@keyframes roll {
+0% {
+background-position: 0 0;
+}
+100% {
+background-position: -600% 0;
+}
+
+#animate {
+
+}
+
+@media (max-width: 768px){
+    #container{
+
+    }
+
+    #animate {
+
+    }
+}
