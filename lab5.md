@@ -4,6 +4,28 @@ AUthor: Jamal St. Lewis
 Class: CST3106 - Internet Architecture & Web Developpment
 Assignment: Lab5
 
+
+## Rules Update for Lab 06
+
+The project now uses Hasbro Yahtzee rules instead of the Scandinavian Yatzy
+variant originally proposed in Lab 05.
+
+The updated game has 13 scoring categories. One Pair and Two Pairs have been
+removed. The upper-section bonus is 35 points at a subtotal of 63 or more.
+
+Three of a Kind and Four of a Kind score the sum of all five dice when their
+matching requirements are met. Full House scores 25 points, Small Straight
+scores 30 points, and Large Straight scores 40 points.
+
+The green-and-gold design system, responsive layout, and five-dice interface
+remain unchanged.
+
+The class names from the Lab 06 instructions are retained. Unfinished scoring
+and additional-Yahtzee/Joker behavior will be identified clearly as pending.
+
+Rules reference:
+[Hasbro Yahtzee instructions](https://www.hasbro.com/common/instruct/yahtzee.pdf)
+
 ## Section 1: Project Overview
 Documentation markdown for the lab5 project. This is overview of for the Yatzy project within this project.
 Game functionality to follow at later labs/steps. This markdown will focus on design & colour scheme.
@@ -20,6 +42,7 @@ Components in the design
 ## Section 2: Game Rules
 
 This game uses 5 dice. The scoring sheet is divided into upper and lower scoring categories. 
+
 
 ### Game Objective
 The objective of the game is to score the most amount of points. A player acquires points by rolling dice during their turn to make different combinations. Various combinations earn a player a different amount of points. The points are recorded on the scoresheet. Each combination can only be used by a player once per game.
