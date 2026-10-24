@@ -1,7 +1,7 @@
 "use strict";
 class YatzeeDice {
   constructor(numberOfDice = 5) {
-    this.numberOfDice = 5;
+    this.numberOfDice = numberOfDice;
     this.reset();   
   }
 
@@ -20,7 +20,7 @@ class YatzeeDice {
   rollAvailable() {
     for (let index = 0; index < this.numberOfDice; index++) {
       if (!this.held[index]){
-        this.value[index] = this.roll;
+        this.values[index] = this.roll();
       }
     }
   }
@@ -33,10 +33,10 @@ will reverse teh boolean.
 
 /*creates a new array for the dice value and held state
 zero for ones that were not rolled... yet because it is not a possible result
-if the fill value is false then none of the dice are being held. They are all being rolled.
+if the fill value is false then none of the dice are being held. They are all availalbe to roll.
 */
   reset(){
-    this.value = new Array(this.numberOfDice).fill(0);
+    this.values = new Array(this.numberOfDice).fill(0);
     this.held = new Array(this.numberOfDice).fill(false);
   }
 }
