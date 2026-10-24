@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<script>
+
+/*MODULE 1: DICE | Responsibility:  Generate dice values and store the current results.*/
+
+class Dice {
+  constructor() {
+    this.numberOfDice = 5;
+
+    // Zero means that a die has not been rolled yet.
+    this.currentValues = [0, 0, 0, 0, 0];
+  }
+
+  /*
+    roll() Returns one random integer between 1 and 6.
+  */
+  roll() {
+    return Math.floor(Math.random() * 6) + 1;
+  }
+
+  /*
+    rollAll()  Calls roll() once for each die and stores the results.
+      roll() returns one number.
+      rollAll() updates the collection of dice.
+  */
+  rollAll() {
+    for (let index = 0; index < this.numberOfDice; index++) {
+      this.currentValues[index] = this.roll();
+    }
+
+    // Return a copy so outside code does not directly share the stored array.
+    return this.currentValues.slice();
+  }
+}
+
+
+/* MODULE 2: YATZY ENGINE | Responsibility:  Validate scoring selections, calculate & store scores*/
+
+class YatzyEngine {
+  constructor() {
+   
+    this.categories = [
+      "ones",
+      "twos",
+      "threes",
+      "fours",
+      "fives",
+      "sixes",
+      "threeOfAKind",
+      "fourOfAKind",
+      "fullHouse",
+      "smallStraight",
+      "largeStraight",
+      "yahtzee",
+      "chance"
+    ];
+
+    this.scoreTable = {};
+
+    for (const category of this.categories) {
+      this.scoreTable[category] = null;
+    }
+  }
+
+  /*    isValidSelection(category, diceValues)
+    to check if you can select that category. 
+    Returns true only if:
+      1. The category exists.
+      2. Category has not already been used by player
+      3. diceValues is an array containing five values.
+      4. Every value is an integer between 1 and 6.
+
+    It does not require the dice to earn points.
+    A legal choice may score zero.
+  */
+  isValidSelection(category, diceValues) {
+    if (!this.categories.includes(category)) {
+      return false;
+    }
+
+    if (this.scoreTable[category] !== null) {
+      return false;
+    }
+
+    if (!Array.isArray(diceValues) || diceValues.length !== 5) {
+      return false;
+    }
+
+    for (const value of diceValues) {
+      if (!Number.isInteger(value) || value < 1 || value > 6) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /*    calculateScore(category, diceValues) calculates but does not record score  */
+  calculateScore(category, diceValues) {
+    if (!this.isValidSelection(category, diceValues)) {
+      return null;
+    }
+
+    /*
+      Count each face.
+      Index 0 counts ones, index 1 counts twos, etc.
+      Example:
+        Dice:   [2, 2, 5, 5, 5]
+        Counts: [0, 2, 0, 0, 3, 0]
+    */
+    const counts = [0, 0, 0, 0, 0, 0];
+
+    for (const value of diceValues) {
+      counts[value - 1]++;
+    }
+
+    /*
+      reduce() combines the five values into one total.
+      The final 0 is the starting value of the total.
+    */
+    const total = diceValues.reduce(function (sum, value) {
+      return sum + value;
+    }, 0);
+
+    /*
+      Upper-section calculation.
+
+      indexOf() finds the category's position.
+      Positions 0–5 correspond to Ones through Sixes.
+    */
+    const categoryIndex = this.categories.indexOf(category);
+
+    if (categoryIndex < 6) {
+      const face = categoryIndex + 1;
+
+      return counts[categoryIndex] * face;
+    }
+
+    /*
+      Remove duplicates and sort the values for straight checks.
+
+      new Set():
+        Keeps one occurrence of each value.
+
+      [...]:
+        Converts the Set into an array.
+
+      sort((a, b) => a - b):
+        Sorts numerically.
+
+      join(""):
+        Combines the numbers into a string.
+
+      Example:
+        [1, 2, 2, 3, 4] becomes "1234".
+    */
+    const sequence = [...new Set(diceValues)]
+      .sort((a, b) => a - b)
+      .join("");
+
+    switch (category) {
+      case "threeOfAKind":
+        /*
+          some() checks whether any face appears at least three times.
+          If it does, all five dice are added.
+        */
+        if (counts.some(count => count >= 3)) {
+          return total;
+        }
+
+        return 0;
+
+      case "fourOfAKind":
+        if (counts.some(count => count >= 4)) {
+          return total;
+        }
+
+        return 0;
+
+      case "fullHouse":
+        /*
+          A normal Full House requires three of one value
+          and two of a different value.
+        */
+        if (counts.includes(3) && counts.includes(2)) {
+          return 25;
+        }
+
+        return 0;
+
+      case "smallStraight":
+        if (
+          sequence.includes("1234") ||
+          sequence.includes("2345") ||
+          sequence.includes("3456")
+        ) {
+          return 30;
+        }
+
+        return 0;
+
+      case "largeStraight":
+        if (sequence === "12345" || sequence === "23456") {
+          return 40;
+        }
+
+        return 0;
+
+      case "yahtzee":
+        if (counts.includes(5)) {
+          return 50;
+        }
+
+        return 0;
+
+      case "chance":
+        return total;
+
+      default:
+        return null;
+    }
+  }
+}
+
+
+/* MODULE 3: YATZY GAME | Responsibility:   start & finish game - record scores */
+
+class YatzyGame {
+  constructor() {
+    this.startNewGame();
+  }
+
+  /*     startNewGame()  resets dice & game values to start new game   */
+  startNewGame() {
+    this.currentPlayer = "Player 1";
+    this.currentRound = 1;
+    this.totalScore = 0;
+    this.upperBonus = 0;
+    this.gameOver = false;
+
+    this.dice = new Dice();
+    this.engine = new YatzyEngine();
+  }
+
+  /*    endTurn(category, diceValues) 
+
+    Finishes a turn by:
+      1. Checking that the game is still active.
+      2. Calculating the selected category's score.
+      3. Recording it.
+      4. Recalculating the total and upper bonus.
+      5. Advancing the round or ending the game.
+
+    Returns:
+      true if the turn was recorded.
+      false if the selection was rejected.
+
+    
+  */
+  endTurn(category, diceValues) {
+    if (this.gameOver) {
+      return false;
+    }
+
+    const score = this.engine.calculateScore(category, diceValues);
+
+    if (score === null) {
+      return false;
+    }
+
+    this.engine.scoreTable[category] = score;
+
+    let categoryTotal = 0;
+    let upperSubtotal = 0;
+    let completedCategories = 0;
+
+    for (let index = 0; index < this.engine.categories.length; index++) {
+      const key = this.engine.categories[index];
+      const recordedScore = this.engine.scoreTable[key];
+
+      if (recordedScore !== null) {
+        categoryTotal += recordedScore;
+        completedCategories++;
+
+        // The first six categories form the upper section.
+        if (index < 6) {
+          upperSubtotal += recordedScore;
+        }
+      }
+    }
+
+    /* calculate upper bonus */
+    if (upperSubtotal >= 63) {
+      this.upperBonus = 35;
+    } else {
+      this.upperBonus = 0;
+    }
+
+    this.totalScore = categoryTotal + this.upperBonus;
+
+    if (completedCategories === this.engine.categories.length) {
+      this.endGame();
+    } else {
+      this.currentRound++;
+
+      // Clear the dice in preparation for the next turn.
+      this.dice = new Dice();
+    }
+
+    return true;
+  }
+
+  /*   finish game */
+  endGame() {
+    this.gameOver = true;
+
+    return this.totalScore;
+  }
+}
+
+
+</script>
+</html>
