@@ -1,6 +1,6 @@
 /*
   Jamal St. Lewis
-  CST3106 — Lab 06
+  CST3106 — Yatzee Assignment
   Yahtzee game stylesheet
 */
 
@@ -240,4 +240,97 @@ tfoot {
   .site-header h1 {
     font-size: 2rem;
   }
+}
+
+.scorecard {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scorecard th,
+.scorecard td {
+  border-bottom: 1px solid var(--border);
+}
+
+.scorecard tbody th {
+  padding: 12px 8px;
+  text-align: left;
+}
+
+.scorecard .score-cell {
+  width: 100px;
+  padding: 0;
+  vertical-align: middle;
+}
+
+/* Base scorebox appearance */
+.scorecard .score-box {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 12px 8px;
+
+  border: 2px solid transparent;
+  border-radius: 0;
+
+  background-color: var(--surface);
+  color: var(--text);
+
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* An unused category before a roll */
+.scorecard .score-box.is-empty {
+  background-color: var(--surface);
+  color: var(--muted);
+  cursor: default;
+}
+
+/* A potential score that the player may select */
+.scorecard .score-box.is-preview {
+  border-color: var(--gold);
+  background-color: var(--gold-light);
+  color: var(--green-dark);
+  cursor: pointer;
+}
+
+/* Hover feedback applies only to selectable previews */
+.scorecard .score-box.is-preview:hover:not(:disabled) {
+  background-color: var(--green);
+  color: var(--surface);
+}
+
+/* A permanent score that cannot be selected again */
+.scorecard .score-box.is-recorded {
+  background-color: var(--page);
+  color: var(--text);
+  cursor: default;
+}
+
+/* A category restricted by the current scoring rules */
+.scorecard .score-box.is-unavailable {
+  background-color: var(--page);
+  color: var(--muted);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* Keep keyboard focus visible inside the scorebox */
+.scorecard .score-box:focus-visible {
+  outline: 3px solid var(--green-dark);
+  outline-offset: -4px;
+}
+
+.scorecard tfoot td {
+  text-align: center;
+  font-weight: 700;
+}
+
+.scorecard-key {
+  margin-top: var(--space-md);
+  color: var(--muted);
+  font-size: 0.95rem;
 }
