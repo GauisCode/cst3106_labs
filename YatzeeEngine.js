@@ -217,7 +217,7 @@ class YatzeeEngine {
 
     // fixed ""joker "" rules
     if (this.isJokerRoll(values)) {
-      if (category === "fullHouse") return 25;
+      if (category === "s") return 25;
       if (category === "smallStraight") return 30;
       if (category === "largeStraight") return 40;
     }
