@@ -7,21 +7,7 @@ class YatzeeGame {
     this.startNewGame();
   }
 
-  /*
-    Initialize or restart the game.
-  */
-  startNewGame() {
-    this.currentPlayer = "Player 1";
-    this.currentRound = 1;
-    this.rollCount = 0;
-    this.totalScore = 0;
-    this.gameOver = false;
-
-    this.dice.reset();
-    this.engine.reset();
-
-    this.message = "Roll the dice to begin.";
-  }
+  
   /*
     rollDice()
     A successful roll updates values and increases rollCount.
