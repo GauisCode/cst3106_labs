@@ -1,0 +1,336 @@
+/*
+  Jamal St. Lewis
+  CST3106 — Yatzee Assignment
+  Yahtzee game stylesheet
+*/
+
+:root {
+  /* Portfolio colours */
+  --green-dark: #0b3d2e;
+  --green: #146c4e;
+  --green-hover: #0e513b;
+
+  --gold: #d5a72c;
+  --gold-light: #fff4d6;
+
+  --text: #1f2937;
+  --muted: #4b5563;
+  --page: #f6f7f5;
+  --surface: #ffffff;
+  --border: #d1d5db;
+
+  /* Shared spacing */
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  --radius: 8px;
+  --shadow: 0 4px 15px rgba(11, 61, 46, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--page);
+  color: var(--text);
+  font-family: Aptos, Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.site-header,
+.site-footer {
+  padding: var(--space-lg);
+  background-color: var(--green-dark);
+  color: var(--surface);
+  text-align: center;
+}
+
+.site-header {
+  border-bottom: 3px solid var(--gold);
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 2.35rem;
+}
+
+.site-header p,
+.site-footer p {
+  margin: var(--space-sm) 0 0;
+}
+
+.site-footer {
+  border-top: 3px solid var(--gold);
+}
+
+.game-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+/* Two panels on desktop; each is allowed to shrink. */
+.game-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+.panel {
+  min-width: 0;
+  padding: var(--space-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+h2 {
+  margin-top: 0;
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--gold);
+  color: var(--green);
+  font-size: 1.5rem;
+}
+
+.dice-row,
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+/* Real buttons support mouse, touch, and keyboard interaction. */
+button {
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 2px solid var(--green);
+  border-radius: 6px;
+  background-color: var(--green);
+  color: var(--surface);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--green-hover);
+}
+
+button:focus-visible {
+  outline: 3px solid var(--green-dark);
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.secondary {
+  background-color: var(--surface);
+  color: var(--green);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--gold-light);
+}
+
+/* Numbered dice avoid dependency on an image sprite. */
+.die {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 72px;
+  height: 72px;
+  padding: 4px;
+
+  border: 3px solid var(--green);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  color: var(--green-dark);
+  font-size: 1rem;
+}
+
+.die:hover:not(:disabled) {
+  background-color: var(--gold-light);
+}
+
+.die.held {
+  border-color: var(--gold);
+  background-color: var(--gold-light);
+}
+
+/* Reserve room for changing status messages. */
+.message {
+  min-height: 4em;
+  font-weight: 700;
+}
+
+/* Keep native table layout for consistent column alignment. */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+caption {
+  margin-bottom: var(--space-sm);
+  color: var(--muted);
+  text-align: left;
+}
+
+th,
+td {
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+thead,
+tfoot {
+  background-color: var(--page);
+}
+
+.score-button {
+  padding: 6px 8px;
+  font-size: 0.95rem;
+}
+
+.score-button:disabled,
+#roll-button:disabled {
+  border-color: var(--border);
+  background-color: var(--page);
+  color: var(--muted);
+}
+
+.rules {
+  margin-top: var(--space-xl);
+}
+
+/* Stack the game panels on narrower screens. */
+@media (max-width: 800px) {
+  .game-board {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 450px) {
+  .game-container,
+  .panel {
+    padding: var(--space-md);
+  }
+
+  .dice-row {
+    gap: var(--space-sm);
+  }
+
+  .die {
+    width: 56px;
+    height: 56px;
+    font-size: 0.9rem;
+  }
+
+  .site-header h1 {
+    font-size: 2rem;
+  }
+}
+
+.scorecard {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scorecard th,
+.scorecard td {
+  border-bottom: 1px solid var(--border);
+}
+
+.scorecard tbody th {
+  padding: 12px 8px;
+  text-align: left;
+}
+
+.scorecard .score-cell {
+  width: 100px;
+  padding: 0;
+  vertical-align: middle;
+}
+
+/* Base scorebox appearance */
+.scorecard .score-box {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 12px 8px;
+
+  border: 2px solid transparent;
+  border-radius: 0;
+
+  background-color: var(--surface);
+  color: var(--text);
+
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* An unused category before a roll */
+.scorecard .score-box.is-empty {
+  background-color: var(--surface);
+  color: var(--muted);
+  cursor: default;
+}
+
+/* A potential score that the player may select */
+.scorecard .score-box.is-preview {
+  border-color: var(--gold);
+  background-color: var(--gold-light);
+  color: var(--green-dark);
+  cursor: pointer;
+}
+
+/* Hover feedback applies only to selectable previews */
+.scorecard .score-box.is-preview:hover:not(:disabled) {
+  background-color: var(--green);
+  color: var(--surface);
+}
+
+/* A permanent score that cannot be selected again */
+.scorecard .score-box.is-recorded {
+  background-color: var(--page);
+  color: var(--text);
+  cursor: default;
+}
+
+/* A category restricted by the current scoring rules */
+.scorecard .score-box.is-unavailable {
+  background-color: var(--page);
+  color: var(--muted);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* Keep keyboard focus visible inside the scorebox */
+.scorecard .score-box:focus-visible {
+  outline: 3px solid var(--green-dark);
+  outline-offset: -4px;
+}
+
+.scorecard tfoot td {
+  text-align: center;
+  font-weight: 700;
+}
+
+.scorecard-key {
+  margin-top: var(--space-md);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
