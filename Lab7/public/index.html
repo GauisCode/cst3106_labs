@@ -140,6 +140,9 @@
 <script src="YatzeeEngine.js"></script>
 <script src="YatzeeGame.js"></script>
 
+<!-- Load jQuery for the dice animation effects. -->  
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <!-- Main UI code -->
 <script>
     "use strict";
@@ -208,36 +211,79 @@
             };
         }
     }
+        // DICE VALUE DISPLAY AND STATES
+        
+    //what each die in a jQuery object. drawn individually instead of changing them all together
+    //empty will remove the previous text that we had
+    //dot posittion is the dot positioning for each die value. 
+    // append will add the corresponding dot to the to the corresponding die button.
+    function drawDieFace(button, value) {
+        const $die = $(button);
+
+        // Positions are [horizontal percentage, vertical percentage].
+        const dotPositions = {
+            1: [[50, 50]],
+
+            2: [[25, 25], [75, 75]],
+
+            3: [[25, 25], [50, 50], [75, 75]],
+
+            4: [[25, 25], [75, 25], [25, 75], [75, 75]],
+
+            5: [[25, 25], [75, 25], [50, 50],
+            [25, 75], [75, 75]],
+
+            6: [[25, 25], [75, 25],
+            [25, 50], [75, 50],
+            [25, 75], [75, 75]]
+        };
+
+        $die.empty();
+        $die.attr("data-value", value);
+
+        for (const [left, top] of dotPositions[value]) {
+            const $dot = $("<span>")
+                .addClass("dot")
+                .attr("aria-hidden", "true")
+                .css({
+                    left: left + "%",
+                    top: top + "%"
+                });
+
+            $die.append($dot);
+        }
+    }
 
 
-    // DICE VALUE DISPLAY AND STATES
 
     function updateDiceDisplay() {
-        diceButtons.forEach(function (button, index) {
-            const value = game.dice.values[index];
-            const held = game.dice.held[index];
+            diceButtons.forEach(function (button, index) {
+                const value = game.dice.values[index];
+                const held = game.dice.held[index];
 
-            // Zero is displayed as a dash before the initial roll.
-            button.textContent = value === 0
-                ? "–"
-                : value + (held ? " · Held" : "");
+                // Show six dots before the first roll.
+                // Keep the actual game value at zero until a roll succeeds.
+                const displayedValue = value === 0 ? 6 : value;
 
-            // Add .held when held is true.
-            // Remove .held when held is false.
-            button.classList.toggle("held", held);
+                drawDieFace(button, displayedValue);
 
-            button.setAttribute("aria-pressed", String(held));
-
-            button.setAttribute(
-                "aria-label",
-                "Die " + (index + 1) +
-                (value === 0 ? ", not rolled" : ", value " + value)
-            );
-
-            // Holding does not happen before rolling or after the game is done.
-            button.disabled = game.gameOver || game.rollCount === 0;
-        });
-    }
+                $(button)
+                    .toggleClass("held", held)
+                    .attr("aria-pressed", String(held))
+                    .attr(
+                        "aria-label",
+                        "Die " + (index + 1) +
+                        (value === 0
+                            ? ", not rolled, showing six dots"
+                            : ", value " + value) +
+                        (held ? ", held" : "")
+                    )
+                    .prop(
+                        "disabled",
+                        game.gameOver || game.rollCount === 0
+                    );
+            });
+        }
 
 
     // RECORDING AND DISPLAYING GAME SCORES
