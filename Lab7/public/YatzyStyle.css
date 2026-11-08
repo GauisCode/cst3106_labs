@@ -334,3 +334,35 @@ tfoot {
   color: var(--muted);
   font-size: 0.95rem;
 }
+
+/* dice layout should now be more square*/
+.dice-row .die {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    padding: 0;
+    border: 2px solid #222;
+    border-radius: 12px;
+    background: white;
+    color: #111;
+    box-sizing: border-box;
+}
+
+/* Each pip is a small circle positioned within its die. */
+.dice-row .die .dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #111;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* Keep held dice visually distinguishable. */
+.dice-row .die.held {
+    border-color: #996600;
+    box-shadow: 0 0 0 3px #ffd766;
+}
