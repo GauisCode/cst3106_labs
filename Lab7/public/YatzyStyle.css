@@ -366,3 +366,8 @@ tfoot {
     border-color: #996600;
     box-shadow: 0 0 0 3px #ffd766;
 }
+/* Disable transitions during the initial render to avoid a flash of animation. */
+.dice-row .die {
+    transform-origin: center;
+    transition: none;
+}
