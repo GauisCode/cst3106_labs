@@ -212,7 +212,7 @@
         }
     }
         // DICE VALUE DISPLAY AND STATES
-        
+
     //what each die in a jQuery object. drawn individually instead of changing them all together
     //empty will remove the previous text that we had
     //dot posittion is the dot positioning for each die value. 
@@ -260,6 +260,13 @@
             diceButtons.forEach(function (button, index) {
                 const value = game.dice.values[index];
                 const held = game.dice.held[index];
+                // Held dice stay upright.
+                // When no rolls have been made this turn, reset every die upright.
+                if (held || game.rollCount === 0 || game.gameOver) {
+                    $(button)
+                        .css("transform", "rotate(0deg)")
+                        .data("rotation", 0);
+                }
 
                 // Show six dots before the first roll.
                 // Keep the actual game value at zero until a roll succeeds.
@@ -449,16 +456,98 @@
         updateDiceDisplay();
         updateScoreTable();
     }
+// DICE ANIMATION
+    function animateAvailableDice() {
+            const animations = [];
 
+            $(diceButtons)
+                .filter(function (index) {
+                    return !game.dice.held[index];
+                })
+                .each(function () {
+                    const $die = $(this);
+
+                    // Remember the angle where this die finished last time.
+                    const startingAngle = $die.data("rotation") || 0;
+
+                    // Choose a new random orientation.
+                    const endingAngle = Math.floor(Math.random() * 360) + 1;
+
+                    const animation = new Promise(function (resolve) {
+                        $({ angle: startingAngle }).animate(
+                            { angle: endingAngle },
+                            {
+                                duration: 600,
+
+                                step: function (currentAngle) {
+                                    $die.css(
+                                        "transform",
+                                        "rotate(" + currentAngle + "deg)"
+                                    );
+                                },
+
+                                complete: function () {
+                                    $die
+                                        .css(
+                                            "transform",
+                                            "rotate(" + endingAngle + "deg)"
+                                        )
+                                        .data("rotation", endingAngle);
+
+                                    resolve();
+                                }
+                            }
+                        );
+                    });
+
+                    animations.push(animation);
+                });
+
+            return Promise.all(animations);
+        }
 
     // EVENT HANDLERS
 
+   let isRolling = false;
+
     async function onRollButtonClick() {
-       await game.rollDice();
-        render();
+        if (isRolling || game.gameOver || game.rollCount >= 3) {
+            return;
+        }
+
+        // Let the game show its existing message if every die is held.
+        if (game.dice.held.every((held) => held)) {
+            await game.rollDice();
+            render();
+            return;
+        }
+
+        isRolling = true;
+
+        // Prevent game actions while a roll is in progress.
+        $(rollButton).prop("disabled", true);
+        $(newGameButton).prop("disabled", true);
+        $(diceButtons).prop("disabled", true);
+        $("#score-rows button").prop("disabled", true);
+
+        $("#message").text("Rolling dice...");
+
+        try {
+            await animateAvailableDice();
+
+            // Get the actual result from your existing server endpoint.
+            await game.rollDice();
+        } catch (error) {
+            console.error("Roll failed:", error);
+            game.message = "Unable to roll dice. Please try again.";
+        } finally {
+            isRolling = false;
+            $(newGameButton).prop("disabled", false);
+            render();
+        }
     }
 
-    rollButton.addEventListener("click", onRollButtonClick);
+    $(rollButton).on("click", onRollButtonClick);
 
     // Connect each button to the corresponding dice position in the array.
     diceButtons.forEach(function (button, index) {
