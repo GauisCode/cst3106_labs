@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Yatzee game by Jamal St. Lewis for CST3106.">
+
+    <title>Yatzee Game | Jamal St. Lewis</title>
+
+    <link rel="stylesheet" href="YatzyStyle.css">
+</head>
+
+
+
+<body>
+
+    <!--PAGE HEADER-->
+
+    <header class="site-header">
+        <h1>Yatzee</h1>
+        <p>Jamal St. Lewis · CST3106 · Yatzee Assignment 1</p>
+    </header>
+
+    <!-- SECTION 1: MAIN GAME CONTAINER-->
+
+    <main class="game-container">
+        <div class="game-board">
+        <section class="panel" aria-labelledby="dice-heading">
+            <h2 id="dice-heading">Dice and Controls</h2>
+
+            <p id="game-status"></p>
+
+            <div class="dice-row" role="group" aria-label="Five Game Dice">
+                <button class="die" type="button" aria-pressed="false">-</button>
+                <button class="die" type="button" aria-pressed="false">-</button>
+                <button class="die" type="button" aria-pressed="false">-</button>
+                <button class="die" type="button" aria-pressed="false">-</button>
+                <button class="die" type="button" aria-pressed="false">-</button>
+            </div>
+            
+            <p>
+                Select the dice to hold it. select it again to release it. You may score after any roll.
+            </p>
+
+            <div class="button-group">
+                <button id="roll-button" type="button"> Roll Dice</button>
+
+                <button id="new-game-button" class="secondary" type="button">New Game</button>
+            </div>
+
+            <!-- roll status to have updated messaged annonced by assistaned tech-->
+             <p id="message" class="message" role="status"></p>
+        </section>
+
+        <!-- RIght Panel with Scoreboard-->
+         <section class="panel" aria-labelledby="score-heading">
+            <h2 id="score-heading">Scorecard</h2>
+
+            <table class="scorecard">
+                <caption> Select an unused category to end the turn</caption>
+                
+                <thead>
+                    <tr>
+                        <th scope="col">Category</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+
+                <tbody id="score-rows">
+
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th scope="row">Upper Subtotal</th>
+                        <td id="upper-subtotal">0</td>
+                    </tr>
+                    
+
+                    <tr>
+                        <th scope="row">Upper Bonus</th>
+                        <td id="upper-bonus">0</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Upper Total</th>
+                        <td id="upper-total">0</td>
+                    </tr><tr>
+                        <th scope="row">Lower Subtotal</th>
+                        <td id="lower-subtotal">0</td>
+                    </tr><tr>
+                        <th scope="row">Yatzee Bonus</th>
+                        <td id="yatzee-bonus">0</td>
+                    </tr><tr>
+                        <th scope="row">Lower Total</th>
+                        <td id="lower-total">0</td>
+                    </tr><tr>
+                        <th scope="row">Grand Total</th>
+                        <td id="grand-total">0</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <p class="scorecard-key">
+                Gold boxes show selectable previews
+                Recorded boxes are locked
+                BLank boxes are unused
+            </p>
+         </section>
+        </div>
+        <!-- INSTRUCTIONS-->
+
+        <section class="panel rules">
+            <h2>How to Play</h2>
+
+            <ol>
+                <li>Roll all five dice</li>
+                <li>Hold any dice you want to keep</li>
+                <li>reroll available dice, up to three rolls per turn</li>
+                <li>Choose on scoring category to finish your turn</li>
+                <li>Filla ll 13 categories to finish the game</li>
+            </ol>
+
+            <p>A dash means category is unused. Zero mean unused category but 0 points have been earned for that category</p>
+            <p>Score at least 63 in the upper section to earn a 35 pooint bonus</p>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>Jamal St Lewis |CST306 Assignment 1| Yatzee Game</p>
+    </footer>
+
+    <!--SECTION 3: GAME MODULES-->
+<!-- SECTION 3: GAME MODULES -->
+
+<!-- Load the classes before creating the game object. -->
+<script src="YatzeeDice.js"></script>
+<script src="YatzeeEngine.js"></script>
+<script src="YatzeeGame.js"></script>
+
+<!-- Load jQuery for the dice animation effects. -->  
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Main UI code -->
+<script>
+    "use strict";
+
+    const game = new YatzeeGame();
+
+    // querySelectorAll finds all five dice buttons.
+    // getElementById finds specifically identified elements.
+    const diceButtons = document.querySelectorAll(".die");
+    const rollButton = document.getElementById("roll-button");
+    const newGameButton = document.getElementById("new-game-button");
+    const scoreRows = document.getElementById("score-rows");
+
+    // To store the scorebox for each category.
+    const scoreControls = {};
+
+
+    // SCORECARD IS CREATED BELOW
+
+    // Create each category by rows.
+    // Each row has a scorebox and a category heading on the left side.
+    // The scorebox should be a button inside the cell.
+    // Selecting the scorebox records the score and ends the turn.
+    // Event listeners are attached once when the scorecard is created.
+
+    function buildScorecard() {
+        for (const category of CATEGORIES) {
+            const row = document.createElement("tr"); // Table row.
+            const heading = document.createElement("th"); // Table heading.
+            const scoreCell = document.createElement("td"); // Table data.
+            const scoreBox = document.createElement("button"); // Button.
+
+            heading.scope = "row";
+            heading.textContent = category.label;
+
+            scoreCell.className = "score-cell";
+
+            scoreBox.type = "button";
+            scoreBox.className = "score-box";
+            scoreBox.disabled = true;
+
+            scoreBox.addEventListener("click", async function () {
+                if (
+                    isRolling || isHolding || isScoring || isStartingGame ||
+                    serverGameId === null || game.gameOver || game.rollCount === 0
+                ) {
+                    return;
+                }
+
+                isScoring = true;
+                let scoreRecorded = false;
+                render();
+
+                try {
+                    const state = await postGameAction(
+                        `/api/games/${serverGameId}/scores`,
+                        "POST",
+                        { category: category.key }
+                    );
+
+                    applyServerState(state);
+                    scoreRecorded = true;
+                } catch (error) {
+                    game.message = `Unable to record score: ${error.message}`;
+                } finally {
+                    isScoring = false;
+                    render();
+
+                   if (scoreRecorded) {
+                        if (game.gameOver) {
+                            newGameButton.focus();
+                        } else {
+                            rollButton.focus();
+                        }
+                    }
+                }
+            });
+
+            scoreCell.appendChild(scoreBox);
+            row.append(heading, scoreCell);
+            scoreRows.appendChild(row);
+
+            // Reference to be updated as more rolls occur.
+            scoreControls[category.key] = {
+                scoreBox: scoreBox
+            };
+        }
+    }
+        // DICE VALUE DISPLAY AND STATES
+
+    //what each die in a jQuery object. drawn individually instead of changing them all together
+    //empty will remove the previous text that we had
+    //dot posittion is the dot positioning for each die value. 
+    // append will add the corresponding dot to the to the corresponding die button.
+    function drawDieFace(button, value) {
+        const $die = $(button);
+
+        // Positions are [horizontal percentage, vertical percentage].
+        const dotPositions = {
+            1: [[50, 50]],
+
+            2: [[25, 25], [75, 75]],
+
+            3: [[25, 25], [50, 50], [75, 75]],
+
+            4: [[25, 25], [75, 25], [25, 75], [75, 75]],
+
+            5: [[25, 25], [75, 25], [50, 50],
+            [25, 75], [75, 75]],
+
+            6: [[25, 25], [75, 25],
+            [25, 50], [75, 50],
+            [25, 75], [75, 75]]
+        };
+
+        $die.empty();
+        $die.attr("data-value", value);
+
+        for (const [left, top] of dotPositions[value]) {
+            const $dot = $("<span>")
+                .addClass("dot")
+                .attr("aria-hidden", "true")
+                .css({
+                    left: left + "%",
+                    top: top + "%"
+                });
+
+            $die.append($dot);
+        }
+    }
+
+
+
+    function updateDiceDisplay() {
+            diceButtons.forEach(function (button, index) {
+                const value = game.dice.values[index];
+                const held = game.dice.held[index];
+                // Held dice stay upright.
+                // When no rolls have been made this turn, reset every die upright.
+                if (held || game.rollCount === 0 || game.gameOver) {
+                    $(button)
+                        .css("transform", "rotate(0deg)")
+                        .data("rotation", 0);
+                }
+
+                // Show six dots before the first roll.
+                // Keep the actual game value at zero until a roll succeeds.
+                const displayedValue = value === 0 ? 6 : value;
+
+                drawDieFace(button, displayedValue);
+
+                $(button)
+                    .toggleClass("held", held)
+                    .attr("aria-pressed", String(held))
+                    .attr(
+                        "aria-label",
+                        "Die " + (index + 1) +
+                        (value === 0
+                            ? ", not rolled, showing six dots"
+                            : ", value " + value) +
+                        (held ? ", held" : "")
+                    )
+                    .prop(
+                        "disabled",
+                        game.gameOver || game.rollCount === 0
+                    );
+            });
+        }
+
+
+    // RECORDING AND DISPLAYING GAME SCORES
+
+    function updateScoreTable() {
+        for (const category of CATEGORIES) {
+            const scoreBox = scoreControls[category.key].scoreBox;
+            const recordedScore = game.engine.scoreTable[category.key];
+
+            // Remove the previous state before assigning a new one.
+            scoreBox.classList.remove(
+                "is-preview",
+                "is-recorded",
+                "is-empty",
+                "is-unavailable"
+            );
+
+            // First state: the category has already been used/recorded.
+            if (recordedScore !== null) {
+                scoreBox.textContent = recordedScore;
+                scoreBox.disabled = true;
+                scoreBox.classList.add("is-recorded");
+
+                scoreBox.setAttribute(
+                    "aria-label",
+                    category.label + ": recorded score " + recordedScore
+                );
+            }
+
+            // Second state: unused categories are blank when no roll has been made.
+            // This also clears unselected previews after a turn ends.
+            else if (game.rollCount === 0 || game.gameOver) {
+                scoreBox.textContent = "";
+                scoreBox.disabled = true;
+                scoreBox.classList.add("is-empty");
+
+                scoreBox.setAttribute(
+                    "aria-label",
+                    category.label + ": unused"
+                );
+            }
+
+            // Third state: display the potential score after dice have been rolled
+            // during an active turn.
+            else {
+                const preview = scorePreviews[category.key];
+                const previewScore = preview?.points ?? "";
+                const canSelect = preview?.canSelect === true;
+
+                scoreBox.textContent = previewScore;
+                scoreBox.disabled =
+                    !canSelect || isRolling || isHolding || isScoring || isStartingGame;
+
+                if (canSelect) {
+                    scoreBox.classList.add("is-preview");
+
+                    scoreBox.setAttribute(
+                        "aria-label",
+                        category.label + ": record " + previewScore +
+                        " points and end turn"
+                    );
+                } else {
+                    // For Joker rules: show when a category is unavailable.
+                    // The additional Yatzee bonus itself is calculated by the engine.
+                    scoreBox.classList.add("is-unavailable");
+
+                    scoreBox.setAttribute(
+                        "aria-label",
+                        category.label +
+                        ": unavailable under the current scoring rules"
+                    );
+                }
+            }
+        }
+
+        updateTotals();
+    }
+
+
+    /*
+      Reads the recorded scores from YatzeeEngine.
+  
+      Does not include previews because previews are calculated for display
+      and are not recorded in the engine's score table.
+  
+      Displayed totals should only change when recorded scores or bonuses change.
+    */
+  
+    
+    function updateTotals() {
+        for (const [cellId, points] of Object.entries(serverTotals)) {
+            document.getElementById(cellId).textContent = points;
+        }
+    }
+
+
+    // REFRESHING THE INTERFACE
+
+    /*
+      render() should read the existing game state and display it.
+  
+      It does not perform game actions such as rolling or changing turns.
+  
+      The game should function as:
+        Player action
+        → Game state changes through the modules
+        → render() updates the page.
+    */
+
+    function render() {
+        document.getElementById("game-status").textContent =
+            game.currentPlayer +
+            " | Turn " + game.currentRound +
+            " of " + CATEGORIES.length +
+            " | Rolls: " + game.rollCount + "/3";
+
+        document.getElementById("message").textContent =
+            game.message;
+
+        rollButton.disabled =
+            isRolling || isHolding || isScoring || isStartingGame ||
+            game.gameOver || game.rollCount >= 3;
+
+        updateDiceDisplay();
+        updateScoreTable();
+        // Temporary: these actions are not connected to the server yet.
+        newGameButton.disabled =
+            isRolling || isHolding || isScoring || isStartingGame;
+
+        diceButtons.forEach(function (button) {
+            button.disabled =
+                isRolling || isHolding || isScoring || isStartingGame ||
+                game.gameOver || game.rollCount === 0;
+        });
+
+
+    }
+// DICE ANIMATION
+    function animateAvailableDice() {
+            const animations = [];
+
+            $(diceButtons)
+                .filter(function (index) {
+                    return !game.dice.held[index];
+                })
+                .each(function () {
+                    const $die = $(this);
+
+                    // Remember the angle where this die finished last time.
+                    const startingAngle = $die.data("rotation") || 0;
+
+                    // Choose a new random orientation.
+                    const endingAngle = Math.floor(Math.random() * 360) + 1;
+
+                    const animation = new Promise(function (resolve) {
+                        $({ angle: startingAngle }).animate(
+                            { angle: endingAngle },
+                            {
+                                duration: 600,
+
+                                step: function (currentAngle) {
+                                    $die.css(
+                                        "transform",
+                                        "rotate(" + currentAngle + "deg)"
+                                    );
+                                },
+
+                                complete: function () {
+                                    $die
+                                        .css(
+                                            "transform",
+                                            "rotate(" + endingAngle + "deg)"
+                                        )
+                                        .data("rotation", endingAngle);
+
+                                    resolve();
+                                }
+                            }
+                        );
+                    });
+
+                    animations.push(animation);
+                });
+
+            return Promise.all(animations);
+        }
+
+    // EVENT HANDLERS
+
+   let isRolling = false;
+
+   let serverGameId = null;
+
+let isHolding = false;
+
+    let isScoring = false;
+    let isStartingGame = false;
+    let scorePreviews = {};
+    let serverTotals = {};
+
+    function applyServerState(state) {
+        game.currentPlayer = state.currentPlayer;
+        game.currentRound = state.currentRound;
+        game.rollCount = state.rollCount;
+        game.gameOver = state.gameOver;
+        game.message = state.message;
+        game.dice.values = state.dice.values;
+        game.dice.held = state.dice.held;
+        game.engine.scoreTable = state.scoreTable;
+
+        scorePreviews = state.scorePreviews;
+        serverTotals = state.totals;
+    }
+
+async function postGameAction(url, method = "POST", body) {
+    const options = { method };
+
+    if (body !== undefined) {
+        options.headers = { "Content-Type": "application/json" };
+        options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || `Request failed (${response.status}).`);
+    }
+
+    return data;
+}
+
+    async function onRollButtonClick() {
+        if (
+            isRolling || isHolding || isScoring || isStartingGame ||
+            game.gameOver || game.rollCount >= 3
+        ) {
+            return;
+        }
+
+        isRolling = true;
+        render();
+        $("#message").text("Rolling dice...");
+
+        try {
+            // Start one server game on the first click.
+            if (serverGameId === null) {
+                const newGame = await postGameAction("/api/games");
+                serverGameId = newGame.id;
+            }
+
+            // Keep the existing rotation animation.
+            await animateAvailableDice();
+
+            // The server rolls the dice and updates its own game.
+            const state = await postGameAction(
+                `/api/games/${serverGameId}/roll`
+            );
+
+            applyServerState(state);
+        } catch (error) {
+            console.error("Roll failed:", error);
+            game.message = `Unable to roll: ${error.message}`;
+        } finally {
+            isRolling = false;
+            render();
+        }
+    }
+
+    $(rollButton).on("click", onRollButtonClick);
+
+    // Connect each button to the corresponding dice position in the array.
+   diceButtons.forEach(function (button, index) {
+        button.addEventListener("click", async function () {
+            if (
+                isRolling || isHolding || isScoring || isStartingGame ||
+                serverGameId === null || game.gameOver || game.rollCount === 0
+            ) {
+                return;
+            }
+
+            isHolding = true;
+            render();
+
+            try {
+                const state = await postGameAction(
+                    `/api/games/${serverGameId}/dice/${index}/hold`,
+                    "PUT",
+                    { held: !game.dice.held[index] }
+                );
+
+                applyServerState(state);
+            } catch (error) {
+                game.message = `Unable to change held die: ${error.message}`;
+            } finally {
+                isHolding = false;
+                render();
+            }
+        });
+    });
+
+    newGameButton.addEventListener("click", async function () {
+        if (isRolling || isHolding || isScoring || isStartingGame) {
+            return;
+        }
+
+        const hasProgress = game.rollCount > 0 || game.currentRound > 1;
+
+        if (
+            !game.gameOver &&
+            hasProgress &&
+            !window.confirm("Start a new game? Your current scores will be cleared.")
+        ) {
+            return;
+        }
+
+        isStartingGame = true;
+        let started = false;
+        render();
+
+        try {
+            const state = await postGameAction("/api/games");
+
+            applyServerState(state);
+            serverGameId = state.id;
+            started = true;
+        } catch (error) {
+            game.message = `Unable to start a new game: ${error.message}`;
+        } finally {
+            isStartingGame = false;
+            render();
+
+            if (started) {
+                rollButton.focus();
+            }
+        }
+    });
+
+
+    // Create controls before updating their contents.
+    buildScorecard();
+    render();
+</script>
+</body>
+
+</html>
