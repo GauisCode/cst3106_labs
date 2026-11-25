@@ -12,10 +12,12 @@ The body will use montserrat to have clean and legible font for text and buttons
 
 ## Colour Palette
 We will be using the following colours and will divide them between the patient interface and the admin userface.
-The Admin userface will use a combination of orange and yellow. Bright and clear with a sense of urgency due to the triage nature.
+### Admin interface
+The Admin user inter face will use a combination of orange and yellow. Bright and clear with a sense of urgency due to the triage nature.
 **Tiger Orange** - F08700
 **Golden Orange** - F49F0A
 **Bright Amber** - EFCA08
+### Patient interface
 The patient interface will use a blueish green colour palette for a calming & professional effect. The patient users may be in a heightened state and we need them in a clear headspace to input information as clearly, and accurately as possible within a shorter time-frame.
 **Light Sea Green** - 00A6A6
 **Pale Sky** - BBDEF0
@@ -44,5 +46,5 @@ The hospital staff receive the report and can prioritize the patients by the urg
 
 ### Application Mockup
 See below for a mockup of the colours and initial design
-![Project diagram](./images/triageMock.png)
+![Project diagram](./images/TriageMock.png)
 
